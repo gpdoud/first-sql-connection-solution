@@ -20,6 +20,43 @@ namespace PrsLibrary {
         public bool IsReviewer { get; set; }
         public bool IsAdmin { get; set; }
 
+        private static void AddSqlInsertUpdateParameters(SqlCommand Cmd, User user) {
+            Cmd.Parameters.Add(new SqlParameter("@username", user.UserName));
+            Cmd.Parameters.Add(new SqlParameter("@password", user.Password));
+            Cmd.Parameters.Add(new SqlParameter("@firstname", user.FirstName));
+            Cmd.Parameters.Add(new SqlParameter("@lastname", user.LastName));
+            Cmd.Parameters.Add(new SqlParameter("@phone", user.Phone));
+            Cmd.Parameters.Add(new SqlParameter("@email", user.Email));
+            Cmd.Parameters.Add(new SqlParameter("@isreviewer", user.IsReviewer));
+            Cmd.Parameters.Add(new SqlParameter("@isadmin", user.IsAdmin));
+        }
+        private static SqlCommand CreateConnection(string ConnStr, string Sql, string message) {
+            SqlConnection Conn = new SqlConnection(ConnStr);
+            Conn.Open();
+            if (Conn.State != ConnectionState.Open) {
+                throw new ApplicationException(message);
+            }
+            SqlCommand Cmd = new SqlCommand(Sql, Conn);
+            return Cmd;
+        }
+
+        public static bool Insert(User user) {
+            string Sql = string.Format("insert into [user] " +
+                " (UserName, Password, FirstName, LastName, Phone, Email, IsReviewer, IsAdmin) " +
+                " values " +
+                " (@username, @password, @firstname, @lastname, @phone, @email, @isreviewer, @isadmin)");
+            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
+
+            AddSqlInsertUpdateParameters(Cmd, user);
+
+            int recsAffected = Cmd.ExecuteNonQuery();
+            if (recsAffected != 1) {
+                throw new ApplicationException("Insert Failed!");
+            }
+            Cmd.Connection.Close();
+            return (recsAffected == 1);
+        }
         public static bool Update(User user) {
             string Sql = string.Format("UPDATE [user] Set " +
                     " UserName = @username, " +
@@ -32,38 +69,33 @@ namespace PrsLibrary {
                     " IsAdmin = @isadmin " +
                     " WHERE ID = @Id; ");
             string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
-            SqlConnection Conn = new SqlConnection(ConnStr);
-            Conn.Open();
-            if (Conn.State != ConnectionState.Open) {
-                throw new ApplicationException("Connection didn't open");
-            }
-            SqlCommand Cmd = new SqlCommand(Sql, Conn);
+            SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             Cmd.Parameters.Add(new SqlParameter("@id", user.Id));
+            AddSqlInsertUpdateParameters(Cmd, user);
 
-            Cmd.Parameters.Add(new SqlParameter("@username", user.UserName));
-            Cmd.Parameters.Add(new SqlParameter("@password", user.Password));
-            Cmd.Parameters.Add(new SqlParameter("@firstname", user.FirstName));
-            Cmd.Parameters.Add(new SqlParameter("@lastname", user.LastName));
-            Cmd.Parameters.Add(new SqlParameter("@phone", user.Phone));
-            Cmd.Parameters.Add(new SqlParameter("@email", user.Email));
-            Cmd.Parameters.Add(new SqlParameter("@isreviewer", user.IsReviewer));
-            Cmd.Parameters.Add(new SqlParameter("@isadmin", user.IsAdmin));
             int recsAffected = Cmd.ExecuteNonQuery();
             if(recsAffected != 1) {
                 throw new ApplicationException("Update Failed!");
             }
+            Cmd.Connection.Close();
             return (recsAffected == 1);
         }
-
+        public static bool Delete(User user) {
+            string Sql = string.Format("DELETE from [user] where ID = @id");
+            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
+            Cmd.Parameters.Add(new SqlParameter("@id", user.Id));
+            int recsAffected = Cmd.ExecuteNonQuery();
+            if(recsAffected != 1) {
+                throw new ApplicationException("Delete Failed!");
+            }
+            Cmd.Connection.Close();
+            return (recsAffected == 1);
+        }
         public static UserCollection Select(string whereClause, string orderByClause) {
             string Sql = string.Format("SELECT * from [User] WHERE ({0}) ORDER BY {1}", whereClause, orderByClause);
             string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
-            SqlConnection Conn = new SqlConnection(ConnStr);
-            Conn.Open();
-            if (Conn.State != ConnectionState.Open) {
-                throw new ApplicationException("Connection didn't open");
-            }
-            SqlCommand Cmd = new SqlCommand(Sql, Conn);
+            SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             SqlDataReader Reader = Cmd.ExecuteReader();
             if (!Reader.HasRows) {
                 throw new ApplicationException("Result set has no rows!");
@@ -94,7 +126,7 @@ namespace PrsLibrary {
                 users.Add(user);
             }
 
-            Conn.Close();
+            Cmd.Connection.Close();
             return users;
         }
     }

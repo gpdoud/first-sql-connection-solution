@@ -30,12 +30,24 @@ namespace FirstSqlConnectionProject {
             //            }
 
             // Select
-            string whereClause = "Id = 7";
+            string whereClause = "LastName = 'Doud'";
             string orderByClause = "UserName desc";
             UserCollection users = User.Select(whereClause, orderByClause);
             User user = users[0];
             user.FirstName = "Greg";
             bool success = User.Update(user);
+            success = User.Delete(user);
+            User user2Insert = new User {
+                UserName = "gpdoud",
+                Password = "password",
+                FirstName = "Gregory",
+                LastName = "Doud",
+                Phone = "513-555-1212",
+                Email = "gdoud@maxtrain.com",
+                IsReviewer = false,
+                IsAdmin = false
+            };
+            success = User.Insert(user2Insert);
 
             int i = 0;
         }
