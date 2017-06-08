@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirstSqlConnectionProject", "FirstSqlConnectionProject\FirstSqlConnectionProject.csproj", "{B05C9A1B-EA87-4976-85AF-C71A2FFB7A17}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrsLibrary", "PrsLibrary\PrsLibrary.csproj", "{A3FAB3B1-A72C-42D4-8B34-9A04B6E9B71F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B05C9A1B-EA87-4976-85AF-C71A2FFB7A17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B05C9A1B-EA87-4976-85AF-C71A2FFB7A17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B05C9A1B-EA87-4976-85AF-C71A2FFB7A17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3FAB3B1-A72C-42D4-8B34-9A04B6E9B71F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3FAB3B1-A72C-42D4-8B34-9A04B6E9B71F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3FAB3B1-A72C-42D4-8B34-9A04B6E9B71F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3FAB3B1-A72C-42D4-8B34-9A04B6E9B71F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
