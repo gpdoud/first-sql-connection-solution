@@ -8,7 +8,7 @@ using System.Data;
 
 namespace PrsLibrary {
 
-    public class Vendor {
+    public class Vendor : PrsTable {
 
         public int Id { get; set; }
         public string  Code { get; set; }
@@ -32,15 +32,15 @@ namespace PrsLibrary {
             Cmd.Parameters.Add(new SqlParameter("@email", vendor.Email));
             Cmd.Parameters.Add(new SqlParameter("@isRecommended", vendor.IsRecommended));
         }
-        private static SqlCommand CreateConnection(string ConnStr, string Sql, string message) {
-            SqlConnection Conn = new SqlConnection(ConnStr);
-            Conn.Open();
-            if (Conn.State != ConnectionState.Open) {
-                throw new ApplicationException(message);
-            }
-            SqlCommand Cmd = new SqlCommand(Sql, Conn);
-            return Cmd;
-        }
+        //private static SqlCommand CreateConnection(string ConnStr, string Sql, string message) {
+        //    SqlConnection Conn = new SqlConnection(ConnStr);
+        //    Conn.Open();
+        //    if (Conn.State != ConnectionState.Open) {
+        //        throw new ApplicationException(message);
+        //    }
+        //    SqlCommand Cmd = new SqlCommand(Sql, Conn);
+        //    return Cmd;
+        //}
 
         public static bool Insert(Vendor vendor) {
             string Sql = string.Format("insert into [vendor] " +
@@ -58,16 +58,13 @@ namespace PrsLibrary {
             }
             // get the last id inserted
             vendor.Id = GetLastIdGenerated(ConnStr, "Vendor");
-            //Cmd = CreateConnection(ConnStr, "SELECT IDENT_CURRENT('VENDOR')", "Failed to get id!");
-            //object newId = Cmd.ExecuteScalar();
-            //vendor.Id = int.Parse(newId.ToString());
 
             Cmd.Connection.Close();
             return (recsAffected == 1);
         }
         private static int GetLastIdGenerated(string ConnStr, string TableName) {
-            string sql = string.Format("SELECT IDENT_CURRENT({0})", TableName);
-            SqlCommand Cmd = CreateConnection(ConnStr, "SELECT IDENT_CURRENT('VENDOR')", "Failed to get id!");
+            string sql = string.Format("SELECT IDENT_CURRENT('{0}')", TableName);
+            SqlCommand Cmd = CreateConnection(ConnStr, sql, "Failed to get id!");
             object newId = Cmd.ExecuteScalar();
             return int.Parse(newId.ToString());
         }

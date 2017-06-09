@@ -8,7 +8,7 @@ using System.Data;
 
 namespace PrsLibrary {
 
-    public class User {
+    public class User : PrsTable {
 
         public int Id { get; set; }
         public string UserName { get; set; }
@@ -30,15 +30,15 @@ namespace PrsLibrary {
             Cmd.Parameters.Add(new SqlParameter("@isreviewer", user.IsReviewer));
             Cmd.Parameters.Add(new SqlParameter("@isadmin", user.IsAdmin));
         }
-        private static SqlCommand CreateConnection(string ConnStr, string Sql, string message) {
-            SqlConnection Conn = new SqlConnection(ConnStr);
-            Conn.Open();
-            if (Conn.State != ConnectionState.Open) {
-                throw new ApplicationException(message);
-            }
-            SqlCommand Cmd = new SqlCommand(Sql, Conn);
-            return Cmd;
-        }
+        //private static SqlCommand CreateConnection(string ConnStr, string Sql, string message) {
+        //    SqlConnection Conn = new SqlConnection(ConnStr);
+        //    Conn.Open();
+        //    if (Conn.State != ConnectionState.Open) {
+        //        throw new ApplicationException(message);
+        //    }
+        //    SqlCommand Cmd = new SqlCommand(Sql, Conn);
+        //    return Cmd;
+        //}
 
         public static bool Insert(User user) {
             string Sql = string.Format("insert into [user] " +
@@ -50,13 +50,21 @@ namespace PrsLibrary {
 
             AddSqlInsertUpdateParameters(Cmd, user);
 
-            int recsAffected = Cmd.ExecuteNonQuery();
-            if (recsAffected != 1) {
-                throw new ApplicationException("Insert Failed!");
-            }
+            int recsAffected = ExecuteSqlInsUpdDelCommand(Cmd, "Insert Failed!");
+            //int recsAffected = Cmd.ExecuteNonQuery();
+            //if (recsAffected != 1) {
+            //    throw new ApplicationException("Insert Failed!");
+            //}
+            user.Id = GetLastIdGenerated(ConnStr, "User");
             Cmd.Connection.Close();
             return (recsAffected == 1);
         }
+        //private static int GetLastIdGenerated(string ConnStr, string TableName) {
+        //    string sql = string.Format("SELECT IDENT_CURRENT('{0}')", TableName);
+        //    SqlCommand Cmd = CreateConnection(ConnStr, sql, "Failed to get id!");
+        //    object newId = Cmd.ExecuteScalar();
+        //    return int.Parse(newId.ToString());
+        //}
         public static bool Update(User user) {
             string Sql = string.Format("UPDATE [user] Set " +
                     " UserName = @username, " +
@@ -73,10 +81,8 @@ namespace PrsLibrary {
             Cmd.Parameters.Add(new SqlParameter("@id", user.Id));
             AddSqlInsertUpdateParameters(Cmd, user);
 
-            int recsAffected = Cmd.ExecuteNonQuery();
-            if(recsAffected != 1) {
-                throw new ApplicationException("Update Failed!");
-            }
+            int recsAffected = ExecuteSqlInsUpdDelCommand(Cmd, "Update Failed!");
+
             Cmd.Connection.Close();
             return (recsAffected == 1);
         }
@@ -85,10 +91,8 @@ namespace PrsLibrary {
             string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             Cmd.Parameters.Add(new SqlParameter("@id", user.Id));
-            int recsAffected = Cmd.ExecuteNonQuery();
-            if(recsAffected != 1) {
-                throw new ApplicationException("Delete Failed!");
-            }
+            int recsAffected = ExecuteSqlInsUpdDelCommand(Cmd, "Delete Failed!");
+
             Cmd.Connection.Close();
             return (recsAffected == 1);
         }

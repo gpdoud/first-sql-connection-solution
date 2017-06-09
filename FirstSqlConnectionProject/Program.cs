@@ -40,7 +40,7 @@ namespace FirstSqlConnectionProject {
             User user2Insert = new User {
                 UserName = "gpdoud",
                 Password = "password",
-                FirstName = "Gregory",
+                FirstName = "Nbr 23",
                 LastName = "Doud",
                 Phone = "513-555-1212",
                 Email = "gdoud@maxtrain.com",
@@ -51,7 +51,7 @@ namespace FirstSqlConnectionProject {
 
             VendorCollection vendors = Vendor.Select("1 = 1", "Id");
             Vendor vendor = new Vendor {
-                Code = "Krog0005",
+                Code = "Krog0009",
                 Name = "Kroger",
                 Address = "123 Any Street",
                 City = "Cincinnati", State = "OH", Zip = "45201",
@@ -59,8 +59,6 @@ namespace FirstSqlConnectionProject {
                 IsRecommended = true
             };
             bool rc = Vendor.Insert(vendor);
-            vendors = Vendor.Select("Code = 'Krog0001'", "Code");
-            vendor = vendors[0];
             vendor.Code = "KROG1111";
             rc = Vendor.Update(vendor);
             rc = Vendor.Delete(vendor);
