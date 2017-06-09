@@ -30,15 +30,6 @@ namespace PrsLibrary {
             Cmd.Parameters.Add(new SqlParameter("@isreviewer", user.IsReviewer));
             Cmd.Parameters.Add(new SqlParameter("@isadmin", user.IsAdmin));
         }
-        //private static SqlCommand CreateConnection(string ConnStr, string Sql, string message) {
-        //    SqlConnection Conn = new SqlConnection(ConnStr);
-        //    Conn.Open();
-        //    if (Conn.State != ConnectionState.Open) {
-        //        throw new ApplicationException(message);
-        //    }
-        //    SqlCommand Cmd = new SqlCommand(Sql, Conn);
-        //    return Cmd;
-        //}
 
         public static bool Insert(User user) {
             string Sql = string.Format("insert into [user] " +
@@ -59,12 +50,6 @@ namespace PrsLibrary {
             Cmd.Connection.Close();
             return (recsAffected == 1);
         }
-        //private static int GetLastIdGenerated(string ConnStr, string TableName) {
-        //    string sql = string.Format("SELECT IDENT_CURRENT('{0}')", TableName);
-        //    SqlCommand Cmd = CreateConnection(ConnStr, sql, "Failed to get id!");
-        //    object newId = Cmd.ExecuteScalar();
-        //    return int.Parse(newId.ToString());
-        //}
         public static bool Update(User user) {
             string Sql = string.Format("UPDATE [user] Set " +
                     " UserName = @username, " +
@@ -132,6 +117,20 @@ namespace PrsLibrary {
 
             Cmd.Connection.Close();
             return users;
+        }
+
+        public static User Select(int Id) {
+            UserCollection users = User.Select($"Id = {Id}", "Id");
+            User user = (users.Count == 1) ? users[0] : null;
+            return user;
+        }
+        public static bool Delete(int Id) {
+            User user = User.Select(Id);
+            if(user == null) {
+                return false;
+            }
+            bool rc = User.Delete(user);
+            return rc;
         }
     }
 }

@@ -32,15 +32,6 @@ namespace PrsLibrary {
             Cmd.Parameters.Add(new SqlParameter("@email", vendor.Email));
             Cmd.Parameters.Add(new SqlParameter("@isRecommended", vendor.IsRecommended));
         }
-        //private static SqlCommand CreateConnection(string ConnStr, string Sql, string message) {
-        //    SqlConnection Conn = new SqlConnection(ConnStr);
-        //    Conn.Open();
-        //    if (Conn.State != ConnectionState.Open) {
-        //        throw new ApplicationException(message);
-        //    }
-        //    SqlCommand Cmd = new SqlCommand(Sql, Conn);
-        //    return Cmd;
-        //}
 
         public static bool Insert(Vendor vendor) {
             string Sql = string.Format("insert into [vendor] " +
@@ -61,12 +52,6 @@ namespace PrsLibrary {
 
             Cmd.Connection.Close();
             return (recsAffected == 1);
-        }
-        private static int GetLastIdGenerated(string ConnStr, string TableName) {
-            string sql = string.Format("SELECT IDENT_CURRENT('{0}')", TableName);
-            SqlCommand Cmd = CreateConnection(ConnStr, sql, "Failed to get id!");
-            object newId = Cmd.ExecuteScalar();
-            return int.Parse(newId.ToString());
         }
         public static bool Update(Vendor vendor) {
             string Sql = string.Format("UPDATE [vendor] Set " +
@@ -143,6 +128,19 @@ namespace PrsLibrary {
             Cmd.Connection.Close();
             return vendors;
 
+        }
+        public static Vendor Select(int Id) {
+            VendorCollection vendors = Vendor.Select($"Id = {Id}", "Id");
+            Vendor vendor = (vendors.Count == 1) ? vendors[0] : null;
+            return vendor;
+        }
+        public static bool Delete(int Id) {
+            Vendor vendor = Vendor.Select(Id);
+            if (vendor == null) {
+                return false;
+            }
+            bool rc = Vendor.Delete(vendor);
+            return rc;
         }
     }
 }

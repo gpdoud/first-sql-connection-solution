@@ -25,7 +25,7 @@ namespace PrsLibrary {
             return int.Parse(newId.ToString());
         }
         protected static int ExecuteSqlInsUpdDelCommand(SqlCommand Cmd, string message) {
-            int recsAffected = Cmd.ExecuteNonQuery();
+           int recsAffected = Cmd.ExecuteNonQuery();
             if (recsAffected != 1) {
                 throw new ApplicationException(message);
             }

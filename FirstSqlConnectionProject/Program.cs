@@ -51,7 +51,7 @@ namespace FirstSqlConnectionProject {
 
             VendorCollection vendors = Vendor.Select("1 = 1", "Id");
             Vendor vendor = new Vendor {
-                Code = "Krog0009",
+                Code = "Krog0010",
                 Name = "Kroger",
                 Address = "123 Any Street",
                 City = "Cincinnati", State = "OH", Zip = "45201",
@@ -62,6 +62,20 @@ namespace FirstSqlConnectionProject {
             vendor.Code = "KROG1111";
             rc = Vendor.Update(vendor);
             rc = Vendor.Delete(vendor);
+
+            ProductCollection products = Product.Select("1 = 1", "Id");
+            Product product = new Product {
+                VendorId = 2,
+                Name = "Widget1",
+                VendorPartNumber = "BWidget",
+                Price = 12345.67M,
+                Unit = "Each",
+                PhotoPath = "http://www.maxtrain.com"
+            };
+            rc = Product.Insert(product);
+            product.Price = 76543.21m;
+            rc = Product.Update(product);
+            rc = Product.Delete(product);
 
             int i = 0;
         }
