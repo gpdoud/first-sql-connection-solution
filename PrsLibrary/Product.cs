@@ -33,7 +33,7 @@ namespace PrsLibrary {
                 " (VendorId, Name, VendorPartNumber, Price, Unit, PhotoPath) " +
                 " values " +
                 " (@VendorId, @Name, @VendorPartNumber, @Price, @Unit, @PhotoPath)");
-            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
 
             AddSqlInsertUpdateParameters(Cmd, product);
@@ -60,7 +60,7 @@ namespace PrsLibrary {
                     " Unit = @Unit, " +
                     " PhotoPath = @PhotoPath " +
                     " WHERE ID = @Id; ");
-            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             Cmd.Parameters.Add(new SqlParameter("@id", product.Id));
             AddSqlInsertUpdateParameters(Cmd, product);
@@ -72,7 +72,7 @@ namespace PrsLibrary {
         }
         public static bool Delete(Product product) {
             string Sql = string.Format("DELETE from [product] where ID = @id");
-            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             Cmd.Parameters.Add(new SqlParameter("@id", product.Id));
 
@@ -83,7 +83,7 @@ namespace PrsLibrary {
         }
         public static ProductCollection Select(string WhereClause, string OrderByClause) {
             string Sql = string.Format("SELECT * from [product] WHERE ({0}) ORDER BY {1}", WhereClause, OrderByClause);
-            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             SqlDataReader Reader = Cmd.ExecuteReader();
             if (!Reader.HasRows) {

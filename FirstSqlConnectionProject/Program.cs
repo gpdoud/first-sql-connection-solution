@@ -77,6 +77,25 @@ namespace FirstSqlConnectionProject {
             rc = Product.Update(product);
             rc = Product.Delete(product);
 
+            PurchaseRequestCollection purchaseRequests = PurchaseRequest.Select("1 = 1", "Id");
+            PurchaseRequest purchaseRequest = new PurchaseRequest();
+            purchaseRequest.UserId = 1;
+            purchaseRequest.Description = "My first purchase request";
+            purchaseRequest.Justification = "My birthday";
+            purchaseRequest.DateNeeded = DateTime.Now;
+            purchaseRequest.DeliveryMode = "USPS";
+            purchaseRequest.DocsAttached = false;
+            purchaseRequest.Status = "New";
+            //purchaseRequest.Total = 0.0M;
+            //purchaseRequest.SubmittedDate = DateTime.Now;
+            rc = PurchaseRequest.Insert(purchaseRequest);
+            purchaseRequest.DateNeeded = DateTime.Now.AddDays(1);
+            rc = PurchaseRequest.Update(purchaseRequest);
+            purchaseRequests = PurchaseRequest.Select("1 = 1", "Id");
+            rc = PurchaseRequest.Delete(purchaseRequest);
+            purchaseRequests = PurchaseRequest.Select("1 = 1", "Id");
+
+
             int i = 0;
         }
     }

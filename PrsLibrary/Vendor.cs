@@ -38,7 +38,7 @@ namespace PrsLibrary {
                 " (Code, Name, Address, City, State, Zip, Phone, Email, IsRecommended) " +
                 " values " +
                 " (@code, @name, @address, @city, @state, @zip, @phone, @email, @isRecommended)");
-            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
 
             AddSqlInsertUpdateParameters(Cmd, vendor);
@@ -65,7 +65,7 @@ namespace PrsLibrary {
                     " Email = @email, " +
                     " IsRecommended = @isRecommended " +
                     " WHERE ID = @Id; ");
-            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             Cmd.Parameters.Add(new SqlParameter("@id", vendor.Id));
             AddSqlInsertUpdateParameters(Cmd, vendor);
@@ -79,7 +79,7 @@ namespace PrsLibrary {
         }
         public static bool Delete(Vendor vendor) {
             string Sql = string.Format("DELETE from [vendor] where ID = @id");
-            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             Cmd.Parameters.Add(new SqlParameter("@id", vendor.Id));
             int recsAffected = Cmd.ExecuteNonQuery();
@@ -91,7 +91,7 @@ namespace PrsLibrary {
         }
         public static VendorCollection Select(string WhereClause, string OrderByClause) {
             string Sql = string.Format("SELECT * from [vendor] WHERE ({0}) ORDER BY {1}", WhereClause, OrderByClause);
-            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             SqlDataReader Reader = Cmd.ExecuteReader();
             if (!Reader.HasRows) {

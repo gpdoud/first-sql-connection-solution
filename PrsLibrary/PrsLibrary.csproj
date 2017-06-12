@@ -44,6 +44,8 @@
     <Compile Include="ProductCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PrsTable.cs" />
+    <Compile Include="PurchaseRequest.cs" />
+    <Compile Include="PurchaseRequestCollection.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserCollection.cs" />
     <Compile Include="Vendor.cs" />

@@ -36,7 +36,7 @@ namespace PrsLibrary {
                 " (UserName, Password, FirstName, LastName, Phone, Email, IsReviewer, IsAdmin) " +
                 " values " +
                 " (@username, @password, @firstname, @lastname, @phone, @email, @isreviewer, @isadmin)");
-            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
 
             AddSqlInsertUpdateParameters(Cmd, user);
@@ -61,7 +61,7 @@ namespace PrsLibrary {
                     " IsReviewer = @isreviewer, " +
                     " IsAdmin = @isadmin " +
                     " WHERE ID = @Id; ");
-            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             Cmd.Parameters.Add(new SqlParameter("@id", user.Id));
             AddSqlInsertUpdateParameters(Cmd, user);
@@ -73,7 +73,7 @@ namespace PrsLibrary {
         }
         public static bool Delete(User user) {
             string Sql = string.Format("DELETE from [user] where ID = @id");
-            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             Cmd.Parameters.Add(new SqlParameter("@id", user.Id));
             int recsAffected = ExecuteSqlInsUpdDelCommand(Cmd, "Delete Failed!");
@@ -83,7 +83,7 @@ namespace PrsLibrary {
         }
         public static UserCollection Select(string whereClause, string orderByClause) {
             string Sql = string.Format("SELECT * from [User] WHERE ({0}) ORDER BY {1}", whereClause, orderByClause);
-            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
+            //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             SqlDataReader Reader = Cmd.ExecuteReader();
             if (!Reader.HasRows) {
