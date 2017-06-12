@@ -89,9 +89,9 @@ namespace PrsLibrary {
             //string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
             SqlCommand Cmd = CreateConnection(ConnStr, Sql, "Connection didn't open");
             SqlDataReader Reader = Cmd.ExecuteReader();
-            if (!Reader.HasRows) {
-                throw new ApplicationException("Result set has no rows!");
-            }
+            //if (!Reader.HasRows) {
+            //    throw new ApplicationException("Result set has no rows!");
+            //}
             PurchaseRequestCollection purchaseRequests = new PurchaseRequestCollection();
             while (Reader.Read()) {
                 int id = Reader.GetInt32(Reader.GetOrdinal("Id"));
@@ -148,6 +148,61 @@ namespace PrsLibrary {
             this.Status = "New"; // a new request
             this.Total = 0.0M; // 
             this.SubmittedDate = DateTime.Now;
+        }
+
+        public bool AddLineItem(int ProductId, int Quantity) {
+            Product product = Product.Select(ProductId);
+            LineItem lineItem = new LineItem {
+                PurchaseRequestId = this.Id,
+                ProductId = ProductId,
+                Quantity = Quantity
+            };
+            bool rc = LineItem.Insert(lineItem);
+            if (!rc)
+                throw new ApplicationException("Insert of line item failed!");
+            this.Total += Quantity * product.Price;
+            rc = PurchaseRequest.Update(this);
+            return rc;
+        }
+        public bool DeleteLineItem(int LineItemId) {
+            LineItem lineItem = LineItem.Select(LineItemId);
+            if(lineItem == null) {
+                throw new ApplicationException("Line item to delete is not found");
+            }
+            decimal amount = lineItem.Product.Price * lineItem.Quantity;
+            bool rc = LineItem.Delete(lineItem);
+            if(!rc) {
+                throw new ApplicationException("Line item delete failed!");
+            }
+            this.Total -= amount;
+            rc = PurchaseRequest.Update(this);
+            if (!rc) {
+                throw new ApplicationException("Purchase Request update failed!");
+            }
+            return rc;
+        }
+        public bool UpdateLineItem(int LineItemId, int NewQuantity) {
+            LineItem lineItem = LineItem.Select(LineItemId);
+            if (lineItem == null) {
+                throw new ApplicationException("Line item to update is not found");
+            }
+            if(NewQuantity < 0) {
+                throw new ApplicationException("New Quantity cannot be less then zero");
+            }
+            decimal oldAmount = lineItem.Product.Price * lineItem.Quantity;
+            lineItem.Quantity = NewQuantity;
+            decimal newAmount = lineItem.Product.Price * lineItem.Quantity;
+            decimal changeTotal = newAmount - oldAmount;
+            bool rc = LineItem.Update(lineItem);
+            if (!rc) {
+                throw new ApplicationException("Line item update failed!");
+            }
+            this.Total += changeTotal;
+            rc = PurchaseRequest.Update(this);
+            if (!rc) {
+                throw new ApplicationException("Purchase Request update failed!");
+            }
+            return rc;
         }
     }
 }

@@ -11,24 +11,6 @@ namespace FirstSqlConnectionProject {
     class Program {
         static void Main(string[] args) {
 
-            //            string ConnStr = @"Server=DSI-WORKSTATION\SQLEXPRESS;Database=prs;Trusted_Connection=True;";
-            //            SqlConnection Conn = new SqlConnection(ConnStr);
-            //            Conn.Open();
-            //            if(Conn.State != ConnectionState.Open) {
-            //                throw new ApplicationException("Connection didn't open");
-            //            }
-
-            //            // Insert
-            //            string SqlInsert = @"insert [user] (UserName, Password, FirstName, LastName, Phone, Email, IsAdmin, IsReviewer)
-            //values(@username, 'password', 'Greg', 'Doud', '513-703-7315', 'gpdoud@gmail.com', @isadmin, 1)";
-            //            SqlCommand CmdInsert = new SqlCommand(SqlInsert, Conn);
-            //            CmdInsert.Parameters.Add(new SqlParameter("@username", "gpdoud"));
-            //            CmdInsert.Parameters.Add(new SqlParameter("@isadmin", "1"));
-            //            int recsAffected = CmdInsert.ExecuteNonQuery();
-            //            if(recsAffected != 1) {
-            //                throw new ApplicationException("Insert failed!");
-            //            }
-
             // Select
             string whereClause = "LastName = 'Doud'";
             string orderByClause = "UserName desc";
@@ -94,6 +76,25 @@ namespace FirstSqlConnectionProject {
             purchaseRequests = PurchaseRequest.Select("1 = 1", "Id");
             rc = PurchaseRequest.Delete(purchaseRequest);
             purchaseRequests = PurchaseRequest.Select("1 = 1", "Id");
+
+            //LineItemCollection lineitems = LineItem.Select("1 = 1", "Id");
+            //LineItem lineitem = new LineItem {
+            //    PurchaseRequestId = 3,
+            //    ProductId = 3,
+            //    Quantity = 1
+            //};
+            //rc = LineItem.Insert(lineitem);
+            //PurchaseRequest NewPurchaseRequest = new PurchaseRequest {
+            //    UserId = 2,
+            //    Description = "First full add of PR",
+            //    Justification = "I just want to"
+            //};
+            //rc = PurchaseRequest.Insert(NewPurchaseRequest);
+            //rc = NewPurchaseRequest.AddLineItem(1, 10);
+            //rc = NewPurchaseRequest.AddLineItem(2, 20);
+            //rc = NewPurchaseRequest.AddLineItem(3, 30);
+            PurchaseRequest NewPurchaseRequest = PurchaseRequest.Select(14);
+            rc = NewPurchaseRequest.UpdateLineItem(5, 11);
 
 
             int i = 0;
