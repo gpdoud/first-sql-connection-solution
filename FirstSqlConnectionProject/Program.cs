@@ -94,8 +94,7 @@ namespace FirstSqlConnectionProject {
             //rc = NewPurchaseRequest.AddLineItem(2, 20);
             //rc = NewPurchaseRequest.AddLineItem(3, 30);
             PurchaseRequest NewPurchaseRequest = PurchaseRequest.Select(14);
-            rc = NewPurchaseRequest.UpdateLineItem(5, 11);
-
+            rc = NewPurchaseRequest.AddLineItem(6, 1);
 
             int i = 0;
         }

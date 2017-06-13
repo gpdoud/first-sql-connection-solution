@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace PrsLibrary {
 
-    internal class LineItem : PrsTable {
+    public class LineItem : PrsTable {
 
         public int Id { get; set; }
         public int PurchaseRequestId { get; set; }
@@ -90,7 +90,7 @@ namespace PrsLibrary {
                 lineItem.Quantity = quantity;
 
                 // get the PurchaseRequest
-                lineItem.PurchaseRequest = PurchaseRequest.Select(lineItem.PurchaseRequestId);
+                //lineItem.PurchaseRequest = PurchaseRequest.Select(lineItem.PurchaseRequestId);
                 // get the Product
                 lineItem.Product = Product.Select(lineItem.ProductId);
 

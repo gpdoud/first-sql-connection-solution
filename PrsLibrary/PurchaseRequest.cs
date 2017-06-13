@@ -21,6 +21,7 @@ namespace PrsLibrary {
         public string Status { get; set; }
         public decimal Total { get; private set; }
         public DateTime SubmittedDate { get; private set; }
+        public LineItemCollection LineItems { get; set; }
 
         private static void AddSqlInsertUpdateParameters(SqlCommand Cmd, PurchaseRequest purchaseRequest) {
             Cmd.Parameters.Add(new SqlParameter("@UserId", purchaseRequest.UserId));
@@ -105,20 +106,23 @@ namespace PrsLibrary {
                 decimal total = Reader.GetDecimal(Reader.GetOrdinal("Total"));
                 DateTime submittedDate = Reader.GetDateTime(Reader.GetOrdinal("SubmittedDate"));
 
-                PurchaseRequest purchaseRequest = new PurchaseRequest();
-                purchaseRequest.Id = id;
-                purchaseRequest.UserId = userId;
-                purchaseRequest.Description = description;
-                purchaseRequest.Justification = justification;
-                purchaseRequest.DateNeeded = dateNeeded;
-                purchaseRequest.DeliveryMode = deliveryMode;
-                purchaseRequest.DocsAttached = docsAttached;
-                purchaseRequest.Status = status;
-                purchaseRequest.Total = total;
-                purchaseRequest.SubmittedDate = submittedDate;
+                PurchaseRequest purchaseRequest = new PurchaseRequest {
+                    Id = id,
+                    UserId = userId,
+                    Description = description,
+                    Justification = justification,
+                    DateNeeded = dateNeeded,
+                    DeliveryMode = deliveryMode,
+                    DocsAttached = docsAttached,
+                    Status = status,
+                    Total = total,
+                    SubmittedDate = submittedDate
+                };
 
                 // get the user
                 purchaseRequest.User = User.Select(purchaseRequest.UserId);
+                // get the line items
+                purchaseRequest.LineItems = GetLineItems(purchaseRequest.Id);
 
                 purchaseRequests.Add(purchaseRequest);
             }
@@ -126,6 +130,14 @@ namespace PrsLibrary {
             Cmd.Connection.Close();
             return purchaseRequests;
 
+        }
+        private void UpdateLineItemsProperty() {
+            this.LineItems = GetLineItems(this.Id);
+        }
+        private static LineItemCollection GetLineItems(int PurchaseRequestId) {
+            LineItemCollection lineItems
+                = LineItem.Select($"PurchaseRequestId = {PurchaseRequestId}", "Id");
+            return lineItems;
         }
         public static PurchaseRequest Select(int Id) {
             PurchaseRequestCollection purchaseRequests = PurchaseRequest.Select($"Id = {Id}", "Id");
@@ -148,6 +160,7 @@ namespace PrsLibrary {
             this.Status = "New"; // a new request
             this.Total = 0.0M; // 
             this.SubmittedDate = DateTime.Now;
+            LineItems = new LineItemCollection();
         }
 
         public bool AddLineItem(int ProductId, int Quantity) {
@@ -162,6 +175,7 @@ namespace PrsLibrary {
                 throw new ApplicationException("Insert of line item failed!");
             this.Total += Quantity * product.Price;
             rc = PurchaseRequest.Update(this);
+            UpdateLineItemsProperty();
             return rc;
         }
         public bool DeleteLineItem(int LineItemId) {
@@ -179,6 +193,7 @@ namespace PrsLibrary {
             if (!rc) {
                 throw new ApplicationException("Purchase Request update failed!");
             }
+            UpdateLineItemsProperty();
             return rc;
         }
         public bool UpdateLineItem(int LineItemId, int NewQuantity) {
@@ -202,6 +217,7 @@ namespace PrsLibrary {
             if (!rc) {
                 throw new ApplicationException("Purchase Request update failed!");
             }
+            UpdateLineItemsProperty();
             return rc;
         }
     }
