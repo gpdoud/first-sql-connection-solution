@@ -131,6 +131,15 @@ namespace PrsLibrary {
             return purchaseRequests;
 
         }
+        private void RecalculateTotal() {
+            LineItemCollection lineItems
+                = LineItem.Select($"PurchaseRequestId = {this.Id}", "Id");
+            var newTotal = lineItems.Sum(li => li.Product.Price * li.Quantity);
+            this.Total = newTotal;
+            if(!PurchaseRequest.Update(this)) {
+                throw new ApplicationException("Update of purchase request failed!");
+            }
+        }
         private void UpdateLineItemsProperty() {
             this.LineItems = GetLineItems(this.Id);
         }
@@ -173,9 +182,10 @@ namespace PrsLibrary {
             bool rc = LineItem.Insert(lineItem);
             if (!rc)
                 throw new ApplicationException("Insert of line item failed!");
-            this.Total += Quantity * product.Price;
-            rc = PurchaseRequest.Update(this);
+            //this.Total += Quantity * product.Price;
+            //rc = PurchaseRequest.Update(this);
             UpdateLineItemsProperty();
+            RecalculateTotal();
             return rc;
         }
         public bool DeleteLineItem(int LineItemId) {
@@ -188,12 +198,13 @@ namespace PrsLibrary {
             if(!rc) {
                 throw new ApplicationException("Line item delete failed!");
             }
-            this.Total -= amount;
-            rc = PurchaseRequest.Update(this);
+            //this.Total -= amount;
+            //rc = PurchaseRequest.Update(this);
             if (!rc) {
                 throw new ApplicationException("Purchase Request update failed!");
             }
             UpdateLineItemsProperty();
+            RecalculateTotal();
             return rc;
         }
         public bool UpdateLineItem(int LineItemId, int NewQuantity) {
@@ -212,12 +223,13 @@ namespace PrsLibrary {
             if (!rc) {
                 throw new ApplicationException("Line item update failed!");
             }
-            this.Total += changeTotal;
-            rc = PurchaseRequest.Update(this);
+            //this.Total += changeTotal;
+            //rc = PurchaseRequest.Update(this);
             if (!rc) {
                 throw new ApplicationException("Purchase Request update failed!");
             }
             UpdateLineItemsProperty();
+            RecalculateTotal();
             return rc;
         }
     }
